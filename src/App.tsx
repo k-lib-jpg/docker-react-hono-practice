@@ -1,25 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css"
+
+interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+}
 
 const App = () => {
   const [title, setTitle] = useState("");
-  const [todos, setTodos] = useState([
-    { 
-      id: 1, 
-      title: "todo1",
-      completed: false
-    },
-    { 
-      id: 2, 
-      title: "todo2", 
-      completed: false 
-    },
-    { 
-      id: 3, 
-      title: "todo3", 
-      completed: false 
-    },
-  ]);
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  useEffect(() => {
+    fetchTodos();
+  }, [])
+
+  const fetchTodos = async () => {
+    const response = await fetch("http://localhost:3000/todos");
+    const data = await response.json();
+    setTodos(data.todos as Todo[]);
+  }
 
   const handleAddTodo = () => {
     setTodos([
