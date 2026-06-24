@@ -21,18 +21,20 @@ const App = () => {
     setTodos(data.todos as Todo[]);
   }
 
-  const handleAddTodo = () => {
-    setTodos([
-      ...todos, 
-      {
-        id: todos.length + 1,
-        title: title,
-        completed: false
+  const handleAddTodo = async() => {
+    const response = await fetch("http://localhost:3000/todos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    ]);
+      body: JSON.stringify({ title }),
+    });
 
-    setTitle("");
-  }
+    const data = await response.json();
+    const todo = data.todo as Todo;
+
+    setTodos([...todos, todo]);
+  };
 
   const handleToggleTodo = (id: number) => {
     setTodos(
